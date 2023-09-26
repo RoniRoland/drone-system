@@ -1,2 +1,2 @@
-# Proyecto No. 2 IPC2 B Sistema de Drones   
+# Proyecto No. 2 IPC2 B 
 <p> Sistema de Drones </p>
