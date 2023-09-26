@@ -6,3 +6,6 @@ class Alturas:
         Nodo.__init__(self)
         self.valor = valor
         self.letra = letra
+
+    def mostrar_alturas(self):
+        f"altura: {self.valor} , letra: {self.letra}"
