@@ -1,5 +1,6 @@
+import os
 import tkinter as tk
-from tkinter import filedialog, simpledialog
+from tkinter import Label, Tk, filedialog, simpledialog
 from tkinter import messagebox
 import xml.etree.ElementTree as Et
 from dron import Dron
@@ -9,8 +10,8 @@ from contenidos import Contenidos
 from alturas import Alturas
 from mensajes import Mensajes
 from instrucciones import Instrucciones
-import os
-from graphviz import Digraph
+import graphviz
+import subprocess
 
 
 class App:
@@ -133,18 +134,22 @@ class App:
         pass
 
     def ver_drones(self):
-        listado = self.lista_drones.mostrar()
-        if listado:
+        listado_drones = self.lista_drones.mostrar()
+        if listado_drones:
             self.text_box.delete(1.0, tk.END)  # Limpiar el cuadro de texto
-            for dron in listado:
+            for dron in listado_drones:
                 self.text_box.insert(tk.END, dron)
         else:
             self.text_box.delete(1.0, tk.END)
             self.text_box.insert(tk.END, "No hay drones para mostrar.")
+            messagebox.showerror(
+                "SIN DATOS",
+                "Primero cargue el archivo xml",
+            )
 
     def agregar_dron(self):
-        listado = self.lista_drones.mostrar()
-        if listado:
+        listado_drones = self.lista_drones.mostrar()
+        if listado_drones:
             nuevo_dron = simpledialog.askstring(
                 "Agregar nuevo dron", "Ingrese el nombre del nuevo dron:"
             )
@@ -160,7 +165,6 @@ class App:
                         f"El Dron {nuevo_dron} ha sido agregado exitosamente al sistema",
                     )
                     self.lista_drones.agregar_en_orden(Dron(nuevo_dron))
-                    self.actualizar_grafo_drones()
         else:
             messagebox.showerror(
                 "SIN DATOS",
@@ -168,7 +172,56 @@ class App:
             )
 
     def ver_sistemas(self):
-        pass
+        lista_Sistema_Drones = self.lista_sistema_drones
+        if lista_Sistema_Drones.esta_vacia():
+            messagebox.showerror(
+                "SIN DATOS",
+                "Primero cargue el archivo xml",
+            )
+
+        else:
+            # Abre un archivo DOT para escribir el gráfico
+            with open("sistemas_drones.dot", "w") as dot_file:
+                # Escribe el encabezado del archivo DOT
+                dot_file.write("digraph G {\n")
+                dot_file.write("    node [shape=box];\n")
+
+                # Agrega el nodo de encabezado
+                dot_file.write(
+                    '    Encabezado [label="Listado de Sistemas", color=blue, style=filled, fillcolor=lightgrey];\n'
+                )
+
+                # Recorre la lista de sistemas de drones y agrega nodos para cada sistema
+                actual = lista_Sistema_Drones.primero
+                while actual:
+                    dot_file.write(f'    "{actual.nombre}";\n')
+                    actual = actual.siguiente
+
+                # Recorre nuevamente la lista para conectar los sistemas al nodo de encabezado
+                actual = lista_Sistema_Drones.primero
+                while actual:
+                    dot_file.write(
+                        f'    Encabezado -> "{actual.nombre}" [color=green, style=filled, fillcolor=lightyellow];\n'
+                    )
+                    actual = actual.siguiente
+
+                # Cierra el archivo DOT
+                dot_file.write("}\n")
+
+            # Genera la imagen (PNG) a partir del archivo DOT usando Graphviz
+            subprocess.run(
+                ["dot", "-Tpng", "sistemas_drones.dot", "-o", "sistemas_drones.png"]
+            )
+            self.text_box.delete(1.0, tk.END)  # Limpiar el cuadro de texto
+            self.text_box.insert(
+                tk.END,
+                "Se ha generado el gráfico de sistemas de drones en sistemas_drones.png",
+            )
+            messagebox.showinfo(
+                "EXITO",
+                "Se ha generado el gráfico de sistemas de drones en sistemas_drones.png",
+            )
+            os.system("sistemas_drones.png")
 
     def ver_mensajes(self):
         listado_mens = self.lista_mensajes.mostrar_listadoMensajes_Instrucciones()
