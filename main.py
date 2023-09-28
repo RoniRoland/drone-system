@@ -184,44 +184,40 @@ class App:
             with open("sistemas_drones.dot", "w") as dot_file:
                 # Escribe el encabezado del archivo DOT
                 dot_file.write("digraph G {\n")
-                dot_file.write("    node [shape=box];\n")
-
-                # Agrega el nodo de encabezado
                 dot_file.write(
-                    '    Encabezado [label="Listado de Sistemas", color=blue, style=filled, fillcolor=lightgrey];\n'
+                    "    rankdir=LR; // Para que las barras estén orientadas horizontalmente\n"
                 )
 
-                # Recorre la lista de sistemas de drones y agrega nodos para cada sistema
-                actual = lista_Sistema_Drones.primero
-                while actual:
-                    dot_file.write(f'    "{actual.nombre}";\n')
-                    actual = actual.siguiente
+                # Define el estilo de la tabla HTML
+                dot_file.write(
+                    '    sistemas [shape=none, label=<<TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">\n'
+                )
+                dot_file.write("        <TR>\n")
+                dot_file.write("            <TD>Nombre del Sistema</TD>\n")
+                dot_file.write("        </TR>\n")
 
-                # Recorre nuevamente la lista para conectar los sistemas al nodo de encabezado
+                # Recorre la lista de sistemas de drones y agrega nodos para cada sistema en la tabla
                 actual = lista_Sistema_Drones.primero
                 while actual:
                     dot_file.write(
-                        f'    Encabezado -> "{actual.nombre}" [color=green, style=filled, fillcolor=lightyellow];\n'
+                        f"        <TR><TD>Dron: {actual.nombre} Altura: {actual.altura_maxima} Cantidad drones: {actual.cantidad_drones}</TD></TR>\n"
                     )
                     actual = actual.siguiente
 
-                # Cierra el archivo DOT
+                # Cierra el estilo de la tabla HTML
+                dot_file.write("    </TABLE>>];\n")
                 dot_file.write("}\n")
 
-            # Genera la imagen (PNG) a partir del archivo DOT usando Graphviz
-            subprocess.run(
-                ["dot", "-Tpng", "sistemas_drones.dot", "-o", "sistemas_drones.png"]
-            )
-            self.text_box.delete(1.0, tk.END)  # Limpiar el cuadro de texto
-            self.text_box.insert(
-                tk.END,
-                "Se ha generado el gráfico de sistemas de drones en sistemas_drones.png",
-            )
-            messagebox.showinfo(
-                "EXITO",
-                "Se ha generado el gráfico de sistemas de drones en sistemas_drones.png",
-            )
-            os.system("sistemas_drones.png")
+        # Genera la imagen (PNG) a partir del archivo DOT usando Graphviz
+        subprocess.run(
+            ["dot", "-Tpng", "sistemas_drones.dot", "-o", "sistemas_drones.png"]
+        )
+        print(
+            "Se ha generado el gráfico de sistemas de drones en estilo de tabla en sistemas_drones.png"
+        )
+
+        # Abre la imagen resultante con el visor de imágenes predeterminado
+        os.system("sistemas_drones.png")
 
     def ver_mensajes(self):
         listado_mens = self.lista_mensajes.mostrar_listadoMensajes_Instrucciones()
