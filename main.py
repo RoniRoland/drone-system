@@ -181,43 +181,66 @@ class App:
 
         else:
             # Abre un archivo DOT para escribir el gráfico
-            with open("sistemas_drones.dot", "w") as dot_file:
-                # Escribe el encabezado del archivo DOT
-                dot_file.write("digraph G {\n")
-                dot_file.write(
-                    "    rankdir=LR; // Para que las barras estén orientadas horizontalmente\n"
+            archivo_dot = open("sistemas_drones.dot", "w")
+            grafo = """digraph G {
+                    fontname="Comic Sans MS,Courier New"
+                    node [fontname="Comic Sans MS,Courier New"]
+                    edge [fontname="Comic Sans MS,Courier New"]
+                    concentrate=True;
+                    rankdir=LR;
+                    node [shape=record]; """
+
+            cantidad_sistemas = lista_Sistema_Drones.tamano()
+
+            # Repite todos los sistemas
+            for cont_sistemas in range(cantidad_sistemas):
+                nombre_sistemaDron = lista_Sistema_Drones.indice(cont_sistemas + 1)
+                grafo += f'{nombre_sistemaDron.nombre} [label="'
+                grafo += f"\nSistema de Dron {nombre_sistemaDron.nombre}|{{\n"
+
+                cantidad_de_Drones_sistema = (
+                    nombre_sistemaDron.lista_contenidos.tamano()
                 )
 
-                # Define el estilo de la tabla HTML
-                dot_file.write(
-                    '    sistemas [shape=none, label=<<TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">\n'
-                )
-                dot_file.write("        <TR>\n")
-                dot_file.write("            <TD>Nombre del Sistema</TD>\n")
-                dot_file.write("        </TR>\n")
-
-                # Recorre la lista de sistemas de drones y agrega nodos para cada sistema en la tabla
-                actual = lista_Sistema_Drones.primero
-                while actual:
-                    dot_file.write(
-                        f"        <TR><TD>Dron: {actual.nombre} Altura: {actual.altura_maxima} Cantidad drones: {actual.cantidad_drones}</TD></TR>\n"
+                # Repite todas las cantidades de drones en el sistema
+                for cont_drones_sistema in range(cantidad_de_Drones_sistema):
+                    i_dron = nombre_sistemaDron.lista_contenidos.i_individual(
+                        cont_drones_sistema + 1
                     )
-                    actual = actual.siguiente
+                    grafo += "{"
+                    grafo += i_dron.dron
 
-                # Cierra el estilo de la tabla HTML
-                dot_file.write("    </TABLE>>];\n")
-                dot_file.write("}\n")
+                    altura_max = i_dron.lista_alturas.tamano()
 
-        # Genera la imagen (PNG) a partir del archivo DOT usando Graphviz
-        subprocess.run(
-            ["dot", "-Tpng", "sistemas_drones.dot", "-o", "sistemas_drones.png"]
-        )
-        print(
-            "Se ha generado el gráfico de sistemas de drones en estilo de tabla en sistemas_drones.png"
-        )
+                    # Repite todas las alturas
+                    for cont_altura in range(altura_max):
+                        i_altura = i_dron.lista_alturas.i_individual(cont_altura + 1)
 
-        # Abre la imagen resultante con el visor de imágenes predeterminado
-        os.system("sistemas_drones.png")
+                        grafo += "|"
+                        grafo += i_altura.letra
+
+                    if cont_drones_sistema + 1 == cantidad_de_Drones_sistema:
+                        grafo += """} } "]; """
+                    else:
+                        grafo += "}|"
+
+            grafo += """
+                }"];
+
+                }
+            """
+
+            # Genera la imagen (PNG) a partir del archivo DOT usando Graphviz
+            archivo_dot.write(grafo)
+            archivo_dot.close()
+            os.environ["PATH"] += os.pathsep + "C:/Program Files/Graphviz/bin"
+            os.system(f"dot -Tpng sistemas_drones.dot -o sistemas_drones.png")
+            print(
+                "Se ha generado el gráfico de sistemas de drones en estilo de tabla en sistemas_drones.png"
+            )
+
+            # Abre la imagen resultante con el visor de imágenes predeterminado
+            os.system("sistemas_drones.png")
 
     def ver_mensajes(self):
         listado_mens = self.lista_mensajes.mostrar_listadoMensajes_Instrucciones()
