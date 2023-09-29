@@ -438,7 +438,7 @@ class App:
             cursor="hand2",
         )
         pdf_manual_U.pack()
-        ruta_manual_U = os.path.join("Manuales", "manual_tecnico_ProyectoNO2.pdf")
+        ruta_manual_U = os.path.join("Manuales", "manual_usuario_ProyectoNO2.pdf")
         pdf_manual_U.bind("<Button-1>", lambda e: self.abrir_pdf(ruta_manual_U))
 
     def abrir_pdf(self, ruta):
