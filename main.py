@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import Label, Tk, filedialog, simpledialog
 from tkinter import messagebox
 from tkinter import font
-import webbrowser
 import xml.etree.ElementTree as Et
 from dron import Dron
 from listaDobleCircular import ListaDobleCircular
@@ -252,7 +251,7 @@ class App:
                 else:
                     messagebox.showinfo(
                         "EXITO",
-                        f"El Dron {nuevo_dron} ha sido agregado exitosamente al sistema",
+                        f"El {nuevo_dron} ha sido agregado exitosamente al sistema",
                     )
                     self.lista_drones.agregar_en_orden(Dron(nuevo_dron))
                     self.ver_drones()
@@ -373,17 +372,24 @@ class App:
             os.system("sistemas_drones.png")
 
     def ver_mensajes(self):
-        listado_mens = self.lista_mensajes.mostrar_listadoMensajes_Instrucciones()
-
-        if listado_mens:
-            self.text_box.delete(1.0, tk.END)  # Limpiar el cuadro de texto
-            self.text_box.insert(
-                tk.END,
-                "\n==LISTADO DE MENSAJES CON INSTRUCCIONES==\n\n\n",
-                "my_font",
+        listado_mens = self.lista_mensajes
+        if listado_mens.esta_vacia():
+            messagebox.showerror(
+                "SIN DATOS",
+                "Primero cargue el archivo xml",
             )
-            for mens in listado_mens:
-                self.text_box.insert(tk.END, mens, "my_font")
+
+        else:
+            imprime = listado_mens.mostrar_listadoMensajes_Instrucciones()
+            if imprime:
+                self.text_box.delete(1.0, tk.END)  # Limpiar el cuadro de texto
+                self.text_box.insert(
+                    tk.END,
+                    "\n==LISTADO DE MENSAJES CON INSTRUCCIONES==\n\n\n",
+                    "my_font",
+                )
+                for mens in imprime:
+                    self.text_box.insert(tk.END, mens, "my_font")
 
     def ver_instrucciones(self):
         # Lógica para ver las instrucciones para enviar un mensaje
