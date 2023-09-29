@@ -106,10 +106,11 @@ class ListaDobleCircular:
     def mostrar(self):
         if not self.esta_vacia():
             actual = self.primero
-            texto = "Listado de Drones en el Sistema\n"
+            texto = "\n=====       Listado de Drones en el Sistema       ======\n"
+            texto += "\n\n"
             numero = 1
             while actual:
-                texto += f"{numero}. {actual.mostrar_Nombre_dron()}\n"
+                texto += f"                                {numero}. {actual.mostrar_Nombre_dron()}\n"
                 actual = actual.siguiente
                 numero += 1
             return texto
