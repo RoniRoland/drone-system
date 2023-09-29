@@ -229,10 +229,10 @@ class App:
         if listado_drones:
             self.text_box.delete(1.0, tk.END)  # Limpiar el cuadro de texto
             for dron in listado_drones:
-                self.text_box.insert(tk.END, dron)
+                self.text_box.insert(tk.END, dron, "my_font")
         else:
             self.text_box.delete(1.0, tk.END)
-            self.text_box.insert(tk.END, "No hay drones para mostrar.")
+            self.text_box.insert(tk.END, "No hay drones para mostrar.", "my_font")
             messagebox.showerror(
                 "SIN DATOS",
                 "Primero cargue el archivo xml",
