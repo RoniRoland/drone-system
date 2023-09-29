@@ -2,6 +2,7 @@ class ListaDobleCircular:
     def __init__(self):
         self.primero = None
         self.ultimo = None
+        self.tamaño = 0
 
     def inicilizacion(self):
         self.primero = None
@@ -10,10 +11,32 @@ class ListaDobleCircular:
     def esta_vacia(self):
         return self.primero is None
 
+    def tamano(self):
+        return self.tamaño
+
+    def indice(self, i):
+        actual = self.primero
+        contador = 0
+        while contador < self.tamano():
+            if (contador + 1) == i:
+                return actual
+            actual = actual.siguiente
+            contador += 1
+
+    def i_individual(self, numero):
+        contador = 0
+        actual = self.primero
+        while contador < self.tamaño:
+            if (contador + 1) == numero:
+                return actual
+            actual = actual.siguiente
+            contador += 1
+
     def agregar_al_final(self, dato):
         if self.esta_vacia():
             self.primero = dato
             self.ultimo = dato
+            self.tamaño += 1
         else:
             actual = self.primero
             while actual.siguiente is not None:
@@ -21,6 +44,7 @@ class ListaDobleCircular:
             dato.anterior = actual
             self.final = dato
             actual.siguiente = dato
+            self.tamaño += 1
 
     def agregar_en_orden(self, dato):
         if self.esta_vacia():
