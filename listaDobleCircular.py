@@ -98,7 +98,7 @@ class ListaDobleCircular:
             actual = self.primero
             while actual is not None:
                 if actual.nombre == nombre:
-                    return nombre  # Se encontró un dron con el nombre especificado
+                    return actual  # Se encontró un dron con el nombre especificado
                 actual = actual.siguiente
 
             return None
@@ -121,6 +121,16 @@ class ListaDobleCircular:
 
         while actual:
             listado_con_formato += actual.mostrar_instrucciones() + "\n\n"
+            actual = actual.siguiente
+
+        return listado_con_formato
+
+    def mostrar_listadoMensajes_Instrucciones_individuales(self):
+        listado_con_formato = ""
+        actual = self.primero
+
+        while actual:
+            listado_con_formato += actual.mostrar_instrucciones_individual() + "\n\n"
             actual = actual.siguiente
 
         return listado_con_formato
