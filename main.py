@@ -154,7 +154,7 @@ class App:
     def cargar_xml(self):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos XML", "*.xml")])
         if file_path:
-            messagebox.showinfo("Carga de Archivo", "Archivo cargado con éxito")
+            # messagebox.showinfo("Carga de Archivo", "Archivo cargado con éxito")
             self.lista_drones.inicilizacion()
             self.lista_sistema_drones.inicilizacion()
             self.lista_mensajes.inicilizacion()
@@ -392,13 +392,83 @@ class App:
                     self.text_box.insert(tk.END, mens, "my_font")
 
     def ver_instrucciones(self):
-        # Lógica para ver las instrucciones para enviar un mensaje
-        pass
+        listado_mensajes = self.lista_mensajes
+        if listado_mensajes.esta_vacia():
+            messagebox.showerror(
+                "SIN DATOS",
+                "Primero cargue el archivo xml",
+            )
+        else:
+            # Crear una nueva ventana
+            ventana_instrucciones = tk.Toplevel(self.root)
+            ventana_instrucciones.title("Instrucciones del Mensaje")
+            ventana_instrucciones.geometry("600x400")
+            ventana_instrucciones.configure(bg="#212325")
+
+            # Crear una etiqueta para mostrar los mensajes disponibles
+            mensaje_label = Label(ventana_instrucciones, text="Seleccione un mensaje:")
+            mensaje_label.pack()
+
+            # Obtener los nombres de los mensajes y almacenarlos en una lista
+            mensajes = []
+            actual = listado_mensajes.primero
+            while actual:
+                mensajes.append(actual.nombre)
+                actual = actual.siguiente
+
+            mensaje_seleccionado = tk.StringVar(ventana_instrucciones)
+            mensaje_seleccionado.set(
+                mensajes[0]
+            )  # Establecer el primer mensaje como predeterminado
+            mensaje_dropdown = tk.OptionMenu(
+                ventana_instrucciones, mensaje_seleccionado, *mensajes
+            )
+            mensaje_dropdown.pack()
+
+            # Crear un cuadro de texto para mostrar las instrucciones
+            instrucciones_textbox = tk.Text(ventana_instrucciones, height=17, width=70)
+            instrucciones_textbox.configure(
+                background="#23262e", foreground="white", insertbackground="white"
+            )
+            instrucciones_textbox.pack()
+
+            # Función para mostrar las instrucciones cuando se selecciona un mensaje
+            def mostrar_instrucciones_seleccionadas():
+                mensaje_elegido = mensaje_seleccionado.get()
+                mensaje_objeto = listado_mensajes.buscar_nombre(mensaje_elegido)
+
+                if mensaje_objeto:
+                    instrucciones = mensaje_objeto.mostrar_instrucciones_individual()
+                    instrucciones_textbox.delete(
+                        1.0, tk.END
+                    )  # Limpiar el cuadro de texto
+                    instrucciones_textbox.insert(tk.END, instrucciones, "my_font")
+                else:
+                    messagebox.showerror(
+                        "Mensaje no encontrado",
+                        "El mensaje seleccionado no se encuentra en la lista de mensajes.",
+                    )
+
+            # Crear un botón para mostrar las instrucciones
+            mostrar_instrucciones_button = tk.Button(
+                ventana_instrucciones,
+                text="Mostrar Instrucciones",
+                command=mostrar_instrucciones_seleccionadas,
+            )
+            mostrar_instrucciones_button.pack()
+
+            # Cerrar la ventana de instrucciones
+            cerrar_button = tk.Button(
+                ventana_instrucciones,
+                text="Cerrar",
+                command=ventana_instrucciones.destroy,
+            )
+            cerrar_button.pack()
 
     def acerca_de(self):
         ventana_estudiante = tk.Toplevel()
         ventana_estudiante.title("Estudiante")
-        ventana_estudiante.geometry("700x515")
+        ventana_estudiante.geometry("559x394")
         ventana_estudiante.configure(bg="#212325")
 
         datos_estudiante = tk.Label(
