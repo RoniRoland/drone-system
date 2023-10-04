@@ -38,13 +38,10 @@ class App:
             insertbackground="white",
             state="disabled",
         )
-
         text_style = (
             "Helvetica",
             18,
-        )  # Cambia "Helvetica" y 12 al estilo y tamaño de fuente que desees
-
-        # Aplicar el estilo de fuente al texto del cuadro de texto
+        )
         self.text_box.tag_configure("my_font", font=text_style)
 
         # Crear el marco para los botones de "Archivo"
@@ -155,7 +152,7 @@ class App:
     def cargar_xml(self):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos XML", "*.xml")])
         if file_path:
-            # messagebox.showinfo("Carga de Archivo", "Archivo cargado con éxito")
+            messagebox.showinfo("Carga de Archivo", "Archivo cargado con éxito")
             self.lista_drones.inicilizacion()
             self.lista_sistema_drones.inicilizacion()
             self.lista_mensajes.inicilizacion()
