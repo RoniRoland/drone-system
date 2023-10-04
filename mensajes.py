@@ -10,7 +10,7 @@ class Mensajes:
         self.lista_instrucciones = ListaDobleCircular()
 
     def mostrar_instrucciones(self):
-        mensaje = f"-Mensaje: *{self.nombre}* -> Sistema de drones {self.sistemaDrones} -> \n\nInstrucciones son: \n\n"
+        mensaje = f"\n\t•Mensaje: *{self.nombre}* \n\t\t -Sistema de drones: {self.sistemaDrones} \n\n\t\tInstrucciones son: \n\n"
         instrucciones_texto = (
             self.lista_instrucciones.mostrar_listadoMensajes_Instrucciones()
         )
