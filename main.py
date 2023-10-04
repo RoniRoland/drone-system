@@ -32,10 +32,11 @@ class App:
         # Cuadro de texto
         self.text_box = tk.Text(root, wrap=tk.WORD, width=75, height=35)
         self.text_box.place(relx=0.40, rely=0.5, anchor="center")
-        # Cambiar el tamaño de la letra en el cuadro de texto
-
         self.text_box.configure(
-            background="#23262e", foreground="white", insertbackground="white"
+            background="#23262e",
+            foreground="white",
+            insertbackground="white",
+            state="disabled",
         )
 
         text_style = (
@@ -211,6 +212,7 @@ class App:
             self.lista_mensajes.mostrar_listadoMensajes_Instrucciones()
 
     def inicio(self):
+        self.text_box.configure(state="normal")
         self.lista_drones.inicilizacion()
         self.lista_sistema_drones.inicilizacion()
         self.lista_mensajes.inicilizacion()
@@ -219,6 +221,7 @@ class App:
             "Sistema LIMPIO",
             f"El sistema ha sido limpiado correctamente",
         )
+        self.text_box.configure(state="disabled")
 
     def generar_xml(self):
         # Lógica para generar un archivo XML
@@ -226,10 +229,13 @@ class App:
 
     def ver_drones(self):
         listado_drones = self.lista_drones.mostrar()
+        self.text_box.configure(state="normal")
         if listado_drones:
             self.text_box.delete(1.0, tk.END)  # Limpiar el cuadro de texto
             for dron in listado_drones:
                 self.text_box.insert(tk.END, dron, "my_font")
+            self.text_box.configure(state="disabled")
+
         else:
             self.text_box.delete(1.0, tk.END)
             self.text_box.insert(tk.END, "No hay drones para mostrar.", "my_font")
@@ -237,6 +243,7 @@ class App:
                 "SIN DATOS",
                 "Primero cargue el archivo xml",
             )
+            self.text_box.configure(state="disabled")
 
     def agregar_dron(self):
         listado_drones = self.lista_drones.mostrar()
@@ -373,11 +380,13 @@ class App:
 
     def ver_mensajes(self):
         listado_mens = self.lista_mensajes
+        self.text_box.configure(state="normal")
         if listado_mens.esta_vacia():
             messagebox.showerror(
                 "SIN DATOS",
                 "Primero cargue el archivo xml",
             )
+            self.text_box.configure(state="disabled")
 
         else:
             imprime = listado_mens.mostrar_listadoMensajes_Instrucciones()
@@ -388,8 +397,9 @@ class App:
                     "\n==LISTADO DE MENSAJES CON INSTRUCCIONES==\n\n\n",
                     "my_font",
                 )
-                for mens in imprime:
-                    self.text_box.insert(tk.END, mens, "my_font")
+
+                self.text_box.insert(tk.END, imprime, "my_font")
+                self.text_box.configure(state="disabled")
 
     def ver_instrucciones(self):
         listado_mensajes = self.lista_mensajes
@@ -434,13 +444,11 @@ class App:
                 bg="#263238",
                 fg="white",
                 font=("Helvetica", 16),
-                highlightbackground="red",
-                highlightcolor="red",
+                highlightbackground="#23262e",
+                highlightcolor="#23262e",
             )
             mensaje_dropdown["menu"].configure(
-                bg="#3f545e",
-                fg="white",
-                font=("Helvetica", 16),
+                bg="#3f545e", fg="white", font=("Helvetica", 16)
             )
             mensaje_dropdown.grid(row=0, column=1, padx=10, pady=10)
 
