@@ -11,4 +11,4 @@ class Instrucciones:
         return f"        ** Instrucción {self.dron} es de altura: {self.altura} **   "
 
     def mostrar_instrucciones_individual(self):
-        return f" ** Instrucción del {self.dron} es de altura: {self.altura} ** "
+        return f"Instrucción del ** {self.dron} ** es de altura: ** {self.altura} ** "

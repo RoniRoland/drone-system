@@ -17,7 +17,7 @@ class Mensajes:
         return mensaje + instrucciones_texto
 
     def mostrar_instrucciones_individual(self):
-        mensaje = f"Sistema de Dron *{self.sistemaDrones}* \n\n"
+        mensaje = f"\n\t•Sistema de Dron *{self.sistemaDrones}* \n\n"
         instrucciones_texto = (
             self.lista_instrucciones.mostrar_listadoMensajes_Instrucciones_individuales()
         )
