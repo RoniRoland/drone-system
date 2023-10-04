@@ -2,6 +2,7 @@ class ListaDobleCircular:
     def __init__(self):
         self.primero = None
         self.ultimo = None
+        self.tamaño = 0
 
     def inicilizacion(self):
         self.primero = None
@@ -10,10 +11,40 @@ class ListaDobleCircular:
     def esta_vacia(self):
         return self.primero is None
 
+    def tamano(self):
+        return self.tamaño
+
+    def __iter__(self):
+        current = self.primero
+        while current is not None:
+            yield current
+            current = current.siguiente
+            if current == self.primero:
+                break
+
+    def indice(self, i):
+        actual = self.primero
+        contador = 0
+        while contador < self.tamano():
+            if (contador + 1) == i:
+                return actual
+            actual = actual.siguiente
+            contador += 1
+
+    def i_individual(self, numero):
+        contador = 0
+        actual = self.primero
+        while contador < self.tamaño:
+            if (contador + 1) == numero:
+                return actual
+            actual = actual.siguiente
+            contador += 1
+
     def agregar_al_final(self, dato):
         if self.esta_vacia():
             self.primero = dato
             self.ultimo = dato
+            self.tamaño += 1
         else:
             actual = self.primero
             while actual.siguiente is not None:
@@ -21,6 +52,7 @@ class ListaDobleCircular:
             dato.anterior = actual
             self.final = dato
             actual.siguiente = dato
+            self.tamaño += 1
 
     def agregar_en_orden(self, dato):
         if self.esta_vacia():
@@ -74,7 +106,7 @@ class ListaDobleCircular:
             actual = self.primero
             while actual is not None:
                 if actual.nombre == nombre:
-                    return nombre  # Se encontró un dron con el nombre especificado
+                    return actual  # Se encontró un dron con el nombre especificado
                 actual = actual.siguiente
 
             return None
@@ -82,10 +114,11 @@ class ListaDobleCircular:
     def mostrar(self):
         if not self.esta_vacia():
             actual = self.primero
-            texto = "Listado de Drones en el Sistema\n"
+            texto = "\n=====       Listado de Drones en el Sistema       ======\n"
+            texto += "\n\n"
             numero = 1
             while actual:
-                texto += f"{numero}. {actual.mostrar_Nombre_dron()}\n"
+                texto += f"                                {numero}. {actual.mostrar_Nombre_dron()}\n"
                 actual = actual.siguiente
                 numero += 1
             return texto
@@ -96,6 +129,24 @@ class ListaDobleCircular:
 
         while actual:
             listado_con_formato += actual.mostrar_instrucciones() + "\n\n"
+            actual = actual.siguiente
+
+        return listado_con_formato
+
+    def mostrar_listadoMensajes_Instrucciones_individuales(self):
+        listado_con_formato = ""
+        actual = self.primero
+        contador = 1
+
+        while actual:
+            listado_con_formato += (
+                "\n\t"
+                + str(contador)
+                + ".- "
+                + actual.mostrar_instrucciones_individual()
+                + "\n"
+            )
+            contador += 1
             actual = actual.siguiente
 
         return listado_con_formato

@@ -8,4 +8,7 @@ class Instrucciones:
         self.altura = altura
 
     def mostrar_instrucciones(self):
-        return f"---La instrucción para {self.dron} es de altura: {self.altura}"
+        return f"\t\t** Instrucción {self.dron} es de altura: {self.altura} **   "
+
+    def mostrar_instrucciones_individual(self):
+        return f"Instrucción del ** {self.dron} ** es de altura: ** {self.altura} ** "
