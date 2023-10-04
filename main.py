@@ -393,6 +393,7 @@ class App:
 
     def ver_instrucciones(self):
         listado_mensajes = self.lista_mensajes
+
         if listado_mensajes.esta_vacia():
             messagebox.showerror(
                 "SIN DATOS",
@@ -401,13 +402,19 @@ class App:
         else:
             # Crear una nueva ventana
             ventana_instrucciones = tk.Toplevel(self.root)
-            ventana_instrucciones.title("Instrucciones del Mensaje")
-            ventana_instrucciones.geometry("600x400")
+            ventana_instrucciones.title("Mensaje Armado")
+            ventana_instrucciones.geometry("630x512")
             ventana_instrucciones.configure(bg="#212325")
 
-            # Crear una etiqueta para mostrar los mensajes disponibles
-            mensaje_label = Label(ventana_instrucciones, text="Seleccione un mensaje:")
-            mensaje_label.pack()
+            # Crear una etiqueta para mostrar el mensaje armado
+            mensaje_label = Label(
+                ventana_instrucciones,
+                text="Seleccione un mensaje:",
+                bg="#263238",
+                fg="white",
+                font=("Helvetica", 16),
+            )
+            mensaje_label.grid(row=0, column=0, padx=10, pady=10)
 
             # Obtener los nombres de los mensajes y almacenarlos en una lista
             mensajes = []
@@ -423,26 +430,129 @@ class App:
             mensaje_dropdown = tk.OptionMenu(
                 ventana_instrucciones, mensaje_seleccionado, *mensajes
             )
-            mensaje_dropdown.pack()
+            mensaje_dropdown.configure(
+                bg="#263238",
+                fg="white",
+                font=("Helvetica", 16),
+                highlightbackground="red",
+                highlightcolor="red",
+            )
+            mensaje_dropdown["menu"].configure(
+                bg="#3f545e",
+                fg="white",
+                font=("Helvetica", 16),
+            )
+            mensaje_dropdown.grid(row=0, column=1, padx=10, pady=10)
 
             # Crear un cuadro de texto para mostrar las instrucciones
             instrucciones_textbox = tk.Text(ventana_instrucciones, height=17, width=70)
             instrucciones_textbox.configure(
-                background="#23262e", foreground="white", insertbackground="white"
+                background="#23262e",
+                foreground="white",
+                insertbackground="white",
+                state="disabled",
             )
-            instrucciones_textbox.pack()
+            instrucciones_textbox.tag_configure("custom_font", font=("Helvetica", 14))
+            instrucciones_textbox.grid(row=1, column=0, columnspan=2, padx=10, pady=10)
 
-            # Función para mostrar las instrucciones cuando se selecciona un mensaje
+            mensaje_armado = Label(
+                ventana_instrucciones,
+                text="Mensaje del sistema de dron:",
+                bg="#263238",
+                fg="white",
+                font=("Helvetica", 16),
+            )
+            mensaje_armado.grid(row=2, column=0, padx=10, pady=10)
+
+            # Cuadro de texto para mostrar el mensaje armado
+            mensaje_textbox = tk.Text(ventana_instrucciones, height=2, width=20)
+            mensaje_textbox.configure(
+                background="#23262e",
+                foreground="white",
+                insertbackground="white",
+                state="disabled",
+            )
+            mensaje_textbox.tag_configure("custom_font2", font=("Helvetica", 14))
+            mensaje_textbox.grid(row=2, column=1, padx=10, pady=10)
+
+            # Funcion para mostrar instrucciones y nombre del sistema
             def mostrar_instrucciones_seleccionadas():
                 mensaje_elegido = mensaje_seleccionado.get()
                 mensaje_objeto = listado_mensajes.buscar_nombre(mensaje_elegido)
 
                 if mensaje_objeto:
                     instrucciones = mensaje_objeto.mostrar_instrucciones_individual()
+                    instrucciones_textbox.configure(state="normal")
                     instrucciones_textbox.delete(
                         1.0, tk.END
                     )  # Limpiar el cuadro de texto
-                    instrucciones_textbox.insert(tk.END, instrucciones, "my_font")
+                    instrucciones_textbox.insert(tk.END, instrucciones, "custom_font")
+                    instrucciones_textbox.configure(state="disabled")
+                    armar_mensaje()
+                else:
+                    messagebox.showerror(
+                        "Mensaje no encontrado",
+                        "El mensaje seleccionado no se encuentra en la lista de mensajes.",
+                    )
+
+            # Función para armar y mostrar el mensaje
+            def armar_mensaje():
+                lista_Sistema_Drones = self.lista_sistema_drones
+                mensaje_elegido = mensaje_seleccionado.get()
+                mensaje_objeto = listado_mensajes.buscar_nombre(mensaje_elegido)
+
+                if mensaje_objeto:
+                    instrucciones = mensaje_objeto.lista_instrucciones
+                    mensaje_armado = ""
+                    tiempo = 0
+
+                    for instruccion in instrucciones:
+                        dron = instruccion.dron
+                        altura = int(instruccion.altura)
+
+                        # Buscar el sistema de drones por el nombre
+                        sistema_drones = None
+                        for sistema in lista_Sistema_Drones:
+                            if sistema.nombre == mensaje_objeto.sistemaDrones:
+                                sistema_drones = sistema
+                                break
+
+                        if sistema_drones:
+                            # Buscar el contenido en el sistema de drones por el nombre del dron
+                            contenido = None
+                            for contenido_dron in sistema_drones.lista_contenidos:
+                                if contenido_dron.dron == dron:
+                                    contenido = contenido_dron
+                                    break
+
+                            if contenido:
+                                # Buscar la letra en la lista de alturas del contenido
+                                letra = None
+                                for altura_obj in contenido.lista_alturas:
+                                    if int(altura_obj.valor) == altura:
+                                        letra = altura_obj.letra
+                                        break
+
+                                if letra:
+                                    mensaje_armado += letra
+                                    # tiempo += 1
+                                else:
+                                    mensaje_armado += (
+                                        f"No se encontró letra para {dron}({altura}) "
+                                    )
+                            else:
+                                mensaje_armado += (
+                                    f"No se encontró contenido para {dron} "
+                                )
+                        else:
+                            mensaje_armado += f"No se encontró el sistema de drones {mensaje_objeto.sistemaDrones} "
+
+                    mensaje_textbox.configure(state="normal")
+                    mensaje_textbox.delete(1.0, tk.END)
+                    mensaje_textbox.insert(
+                        tk.END, mensaje_armado.strip(), "custom_font2"
+                    )
+                    mensaje_textbox.configure(state="disabled")
                 else:
                     messagebox.showerror(
                         "Mensaje no encontrado",
@@ -452,18 +562,34 @@ class App:
             # Crear un botón para mostrar las instrucciones
             mostrar_instrucciones_button = tk.Button(
                 ventana_instrucciones,
-                text="Mostrar Instrucciones",
+                text="Mostrar Instrucciones y Mensaje final",
+                font=("Roboto Medium", 11),
+                bg="#0059b3",
+                activebackground="#0059b3",
+                foreground="white",
+                activeforeground="white",
+                width=30,
+                height=1,
                 command=mostrar_instrucciones_seleccionadas,
             )
-            mostrar_instrucciones_button.pack()
+            mostrar_instrucciones_button.grid(
+                row=3, column=0, columnspan=2, padx=10, pady=10
+            )
 
             # Cerrar la ventana de instrucciones
             cerrar_button = tk.Button(
                 ventana_instrucciones,
                 text="Cerrar",
+                font=("Roboto Medium", 11),
+                bg="#D35B58",
+                activebackground="#D35B58",
+                foreground="white",
+                activeforeground="white",
+                width=15,
+                height=1,
                 command=ventana_instrucciones.destroy,
             )
-            cerrar_button.pack()
+            cerrar_button.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 
     def acerca_de(self):
         ventana_estudiante = tk.Toplevel()
