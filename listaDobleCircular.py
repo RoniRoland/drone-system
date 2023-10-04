@@ -14,6 +14,14 @@ class ListaDobleCircular:
     def tamano(self):
         return self.tamaño
 
+    def __iter__(self):
+        current = self.primero
+        while current is not None:
+            yield current
+            current = current.siguiente
+            if current == self.primero:
+                break
+
     def indice(self, i):
         actual = self.primero
         contador = 0
@@ -128,9 +136,17 @@ class ListaDobleCircular:
     def mostrar_listadoMensajes_Instrucciones_individuales(self):
         listado_con_formato = ""
         actual = self.primero
+        contador = 1
 
         while actual:
-            listado_con_formato += actual.mostrar_instrucciones_individual() + "\n\n"
+            listado_con_formato += (
+                "\n\t"
+                + str(contador)
+                + ".- "
+                + actual.mostrar_instrucciones_individual()
+                + "\n"
+            )
+            contador += 1
             actual = actual.siguiente
 
         return listado_con_formato
