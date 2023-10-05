@@ -19,7 +19,7 @@ class App:
     def __init__(self, root):
         self.root = root
         self.root.title("Gestión de Drones")
-        self.root.geometry("850x600")
+        self.root.geometry("950x640")
         self.root.configure(bg="#212325")
         self.lista_drones = ListaDobleCircular()
         self.lista_sistema_drones = ListaDobleCircular()
@@ -415,7 +415,7 @@ class App:
             # Crear una nueva ventana
             ventana_instrucciones = tk.Toplevel(self.root)
             ventana_instrucciones.title("Mensaje Armado")
-            ventana_instrucciones.geometry("630x512")
+            ventana_instrucciones.geometry("630x550")
             ventana_instrucciones.configure(bg="#212325")
 
             # Crear una etiqueta para mostrar el mensaje armado
