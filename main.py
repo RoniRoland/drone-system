@@ -156,7 +156,9 @@ class App:
             self.lista_drones.inicilizacion()
             self.lista_sistema_drones.inicilizacion()
             self.lista_mensajes.inicilizacion()
+            self.text_box.configure(state="normal")
             self.text_box.delete(1.0, tk.END)
+            self.text_box.configure(state="disabled")
             tree = Et.parse(file_path)
             root = tree.getroot()
 
