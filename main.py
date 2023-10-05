@@ -637,9 +637,14 @@ class App:
 
     def abrir_pdf(self, ruta):
         try:
-            os.startfile(
-                ruta
-            )  # Abre el archivo con el programa predeterminado en Windows
+            if platform.system() == "Windows":
+                os.startfile(
+                    ruta
+                )  # Abre el archivo con el programa predeterminado en Windows
+            elif platform.system() == "Linux":
+                os.system(
+                    f"xdg-open {ruta}"
+                )  # Abre el archivo con el programa predeterminado en Linux
         except Exception as e:
             print(f"Error al abrir el archivo PDF: {e}")
 
