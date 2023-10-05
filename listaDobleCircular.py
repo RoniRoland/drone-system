@@ -7,6 +7,7 @@ class ListaDobleCircular:
     def inicilizacion(self):
         self.primero = None
         self.ultimo = None
+        self.tamaño = 0
 
     def esta_vacia(self):
         return self.primero is None
