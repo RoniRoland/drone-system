@@ -620,27 +620,15 @@ class App:
 
         pdf_manual_T = tk.Label(
             ventana_estudiante,
-            text="Manual Tecnico",
+            text="Documentacion",
             font=("Helvetica", 14),
             bg="#263238",
             foreground="white",
             cursor="hand2",
         )
         pdf_manual_T.pack()
-        ruta_manual_T = os.path.join("Manuales", "manual_tecnico_ProyectoNO2.pdf")
+        ruta_manual_T = os.path.join("Manuales", "documentacion_ProyectoNO2.pdf")
         pdf_manual_T.bind("<Button-1>", lambda e: self.abrir_pdf(ruta_manual_T))
-
-        pdf_manual_U = tk.Label(
-            ventana_estudiante,
-            text="Manual Usuario",
-            font=("Helvetica", 14),
-            bg="#263238",
-            foreground="white",
-            cursor="hand2",
-        )
-        pdf_manual_U.pack()
-        ruta_manual_U = os.path.join("Manuales", "manual_usuario_ProyectoNO2.pdf")
-        pdf_manual_U.bind("<Button-1>", lambda e: self.abrir_pdf(ruta_manual_U))
 
     def abrir_pdf(self, ruta):
         try:
