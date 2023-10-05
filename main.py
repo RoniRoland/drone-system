@@ -11,7 +11,6 @@ from contenidos import Contenidos
 from alturas import Alturas
 from mensajes import Mensajes
 from instrucciones import Instrucciones
-import graphviz
 import subprocess
 import platform
 
@@ -380,10 +379,6 @@ class App:
                 os.system(
                     "xdg-open sistemas_drones.png"
                 )  # Abre la imagen en visor predeterminado en Ubuntu
-            else:
-                # Agrega casos para otros sistemas operativos si es necesario
-                pass
-
             print(
                 "Se ha generado el gráfico de sistemas de drones en estilo de tabla en sistemas_drones.png"
             )
