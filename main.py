@@ -13,6 +13,7 @@ from mensajes import Mensajes
 from instrucciones import Instrucciones
 import graphviz
 import subprocess
+import platform
 
 
 class App:
@@ -314,7 +315,6 @@ class App:
                 "SIN DATOS",
                 "Primero cargue el archivo xml",
             )
-
         else:
             # Abre un archivo DOT para escribir el gráfico
             archivo_dot = open("sistemas_drones.dot", "w")
@@ -369,14 +369,24 @@ class App:
             # Genera la imagen (PNG) a partir del archivo DOT usando Graphviz
             archivo_dot.write(grafo)
             archivo_dot.close()
-            os.environ["PATH"] += os.pathsep + "C:/Program Files/Graphviz/bin"
-            os.system(f"dot -Tpng sistemas_drones.dot -o sistemas_drones.png")
+
+            # Ajusta el comando de Graphviz en función del sistema operativo
+            if platform.system() == "Windows":
+                os.environ["PATH"] += os.pathsep + "C:/Program Files/Graphviz/bin"
+                os.system(f"dot -Tpng sistemas_drones.dot -o sistemas_drones.png")
+                os.system("sistemas_drones.png")
+            elif platform.system() == "Linux":
+                os.system(f"dot -Tpng sistemas_drones.dot -o sistemas_drones.png")
+                os.system(
+                    "xdg-open sistemas_drones.png"
+                )  # Abre la imagen en visor predeterminado en Ubuntu
+            else:
+                # Agrega casos para otros sistemas operativos si es necesario
+                pass
+
             print(
                 "Se ha generado el gráfico de sistemas de drones en estilo de tabla en sistemas_drones.png"
             )
-
-            # Abre la imagen resultante con el visor de imágenes predeterminado
-            os.system("sistemas_drones.png")
 
     def ver_mensajes(self):
         listado_mens = self.lista_mensajes
